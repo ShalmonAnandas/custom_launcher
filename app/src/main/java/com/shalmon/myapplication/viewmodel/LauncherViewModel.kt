@@ -10,10 +10,14 @@ import com.shalmon.myapplication.data.AppInfo
 import com.shalmon.myapplication.data.LauncherItem
 import com.shalmon.myapplication.data.LauncherSettings
 import com.shalmon.myapplication.utils.AppManager
+import com.shalmon.myapplication.utils.PreferencesManager
+import com.shalmon.myapplication.utils.PermissionHelper
 
 class LauncherViewModel(private val context: Context) : ViewModel() {
     
     private val appManager = AppManager(context)
+    private val preferencesManager = PreferencesManager(context)
+    private val permissionHelper = PermissionHelper(context)
     
     private val _allApps = mutableStateOf<List<AppInfo>>(emptyList())
     val allApps: State<List<AppInfo>> = _allApps
@@ -41,7 +45,13 @@ class LauncherViewModel(private val context: Context) : ViewModel() {
     
     init {
         loadApps()
+        loadSettings()
         initializeHomeScreenPages()
+    }
+    
+    private fun loadSettings() {
+        _launcherSettings.value = preferencesManager.loadLauncherSettings()
+        _currentPage.value = preferencesManager.loadCurrentPage()
     }
     
     private fun loadApps() {
@@ -50,12 +60,13 @@ class LauncherViewModel(private val context: Context) : ViewModel() {
     }
     
     private fun initializeHomeScreenPages() {
-        // Initialize with 3 empty pages
-        _homeScreenItems.value = listOf(
-            emptyList(),
-            emptyList(),
-            emptyList()
-        )
+        val savedItems = preferencesManager.loadHomeScreenItems()
+        _homeScreenItems.value = if (savedItems.isEmpty()) {
+            // Initialize with 3 empty pages if no saved data
+            listOf(emptyList(), emptyList(), emptyList())
+        } else {
+            savedItems
+        }
     }
     
     fun searchApps(query: String) {
@@ -69,6 +80,7 @@ class LauncherViewModel(private val context: Context) : ViewModel() {
     
     fun setCurrentPage(page: Int) {
         _currentPage.value = page
+        preferencesManager.saveCurrentPage(page)
     }
     
     fun toggleMenu() {
@@ -101,6 +113,9 @@ class LauncherViewModel(private val context: Context) : ViewModel() {
             currentPageItems.add(newItem)
             currentPages[page] = currentPageItems
             _homeScreenItems.value = currentPages
+            
+            // Save to preferences
+            preferencesManager.saveHomeScreenItems(currentPages)
         }
     }
     
@@ -111,6 +126,9 @@ class LauncherViewModel(private val context: Context) : ViewModel() {
             currentPageItems.removeAll { it.id == itemId }
             currentPages[page] = currentPageItems
             _homeScreenItems.value = currentPages
+            
+            // Save to preferences
+            preferencesManager.saveHomeScreenItems(currentPages)
         }
     }
     
@@ -139,12 +157,16 @@ class LauncherViewModel(private val context: Context) : ViewModel() {
                 }
                 
                 _homeScreenItems.value = currentPages
+                
+                // Save to preferences
+                preferencesManager.saveHomeScreenItems(currentPages)
             }
         }
     }
     
     fun updateSettings(newSettings: LauncherSettings) {
         _launcherSettings.value = newSettings
+        preferencesManager.saveLauncherSettings(newSettings)
     }
     
     fun toggleDragMode() {
@@ -159,6 +181,17 @@ class LauncherViewModel(private val context: Context) : ViewModel() {
         val currentPages = _homeScreenItems.value.toMutableList()
         currentPages.add(emptyList())
         _homeScreenItems.value = currentPages
+        
+        // Save to preferences
+        preferencesManager.saveHomeScreenItems(currentPages)
+    }
+    
+    fun hasPermissions(): Boolean {
+        return permissionHelper.hasAllRequiredPermissions()
+    }
+    
+    fun getMissingPermissions(): List<String> {
+        return permissionHelper.getMissingPermissions()
     }
 }
 

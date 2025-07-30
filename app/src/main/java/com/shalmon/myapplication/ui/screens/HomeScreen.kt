@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Settings
 import com.shalmon.myapplication.ui.components.LauncherGrid
 import com.shalmon.myapplication.ui.components.WallpaperBackground
 import com.shalmon.myapplication.viewmodel.LauncherViewModel
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     viewModel: LauncherViewModel,
+    onNavigateToSettings: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -164,6 +166,17 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                // Settings button
+                FloatingActionButton(
+                    onClick = onNavigateToSettings,
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Settings"
+                    )
+                }
+                
                 // App drawer button
                 FloatingActionButton(
                     onClick = { viewModel.openMenu() },
@@ -174,6 +187,9 @@ fun HomeScreen(
                         contentDescription = "App Drawer"
                     )
                 }
+                
+                // Spacer for symmetry
+                Spacer(modifier = Modifier.size(48.dp))
             }
         }
     }
