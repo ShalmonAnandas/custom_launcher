@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.shalmon.myapplication"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.shalmon.myapplication"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
