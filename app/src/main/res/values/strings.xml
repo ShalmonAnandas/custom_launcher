@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Custom Launcher</string>
+    <string name="search_apps">Search apps...</string>
+    <string name="launcher_settings">Launcher Settings</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="app_menu">App Menu</string>
+    <string name="grid_columns">Grid Columns</string>
+    <string name="grid_rows">Grid Rows</string>
+    <string name="appearance">Appearance</string>
+    <string name="show_page_indicator">Show Page Indicator</string>
+    <string name="page_indicator_subtitle">Display dots indicating current page</string>
+    <string name="wallpaper_scrolling">Wallpaper Scrolling</string>
+    <string name="wallpaper_scrolling_subtitle">Enable wallpaper parallax scrolling</string>
+    <string name="icon_size">Icon Size</string>
+    <string name="icon_size_subtitle">Adjust the size of app icons</string>
+    <string name="app_drawer">App Drawer</string>
+    <string name="search">Search</string>
+    <string name="clear">Clear</string>
+    <string name="back">Back</string>
+    <string name="widget">Widget</string>
 </resources>
